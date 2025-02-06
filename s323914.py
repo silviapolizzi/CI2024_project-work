@@ -2,8 +2,8 @@ import numpy as np
 
 def f1(x: np.ndarray) -> np.ndarray:  # mse: 7.1259e-34
     return np.sin(x[0])
-def f2(x: np.ndarray) -> np.ndarray:  # mse: 6.9280e+12
-    return (((np.log(-0.4934400869679312) * (x[0] + np.sin(x[0]))) + ((np.sinh(((((x[0] + x[1]) + 5.699012049845232) * ((x[1] + x[0]) + x[2])) + -4.107704260756186)) * np.exp((0.4379959892602361 + 0.8086988140626585))) * np.exp(((x[0] * -0.9364358760355536) + 8.36823457579779)))) + (np.sinh((((x[0] + x[2]) + 5.699012049845232) * ((x[1] + x[0]) + x[2]))) * np.exp((-0.4268750330201423 + 7.615334996040264))))
+def f2(x: np.ndarray) -> np.ndarray:  # mse: 1.5524e+13
+    return (1.5709884058444907 * ((x[0] * np.cosh((-9.358695423672904 + (x[2] - np.log(np.abs(np.sin(np.sqrt(np.abs(x[1]))))+1e-8))))) * np.cosh(-9.504926414115314)))
 def f3(x: np.ndarray) -> np.ndarray:  # mse: 3.5665e-01
     return (4.0236886014895346 + (((np.abs((np.tanh(-9.659735641936486) * (x[0] * x[0]))) + (np.tanh(x[2]) - x[2])) + (((x[0] * x[0]) + (((0.01779680514954518 - (x[1] * x[1])) * x[1]) - x[2])) - (np.sin(x[2]) + ((x[0] + x[2]) - x[0])))) - x[2]))
 def f4(x: np.ndarray) -> np.ndarray:  # mse: 6.8457e-02
