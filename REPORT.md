@@ -1,3 +1,223 @@
+## Table of Contents
+
+- [Table of Contents](#table-of-contents)
+- [Lab 1: Set Cover Problem](#lab-1-set-cover-problem)
+  - [Algorithms Implemented](#algorithms-implemented)
+  - [Experimental Setup](#experimental-setup)
+    - [Instances](#instances)
+  - [Results and Discussion](#results-and-discussion)
+  - [Results](#results)
+  - [Conclusion](#conclusion)
+- [Lab 2: Traveling Salesman Problem](#lab-2-traveling-salesman-problem)
+  - [Algorithms implemented](#algorithms-implemented-1)
+    - [Greedy Algorithm](#greedy-algorithm)
+    - [Genetic Algorithm](#genetic-algorithm)
+      - [Fitness Function](#fitness-function)
+      - [Parent Selection](#parent-selection)
+      - [Crossover](#crossover)
+      - [Mutation](#mutation)
+      - [Other tweaks](#other-tweaks)
+      - [Parameters](#parameters)
+  - [Results](#results-1)
+  - [Discussion](#discussion)
+- [Lab 3F: Short Path between two cities](#lab-3f-short-path-between-two-cities)
+- [Lab 3: n-Puzzle description](#lab-3-n-puzzle-description)
+  - [Algorithms implemented](#algorithms-implemented-2)
+    - [Informed Search](#informed-search)
+      - [Best-First Search](#best-first-search)
+      - [A\* Search](#a-search)
+    - [Heuristic Function](#heuristic-function)
+      - [Manhattan Distance](#manhattan-distance)
+  - [Results](#results-2)
+  - [Discussion](#discussion-1)
+- [Project: Symbolic Regression using Genetic Programming](#project-symbolic-regression-using-genetic-programming)
+  - [Abstract](#abstract)
+  - [Introduction](#introduction)
+  - [Methodology](#methodology)
+    - [Technologies Used](#technologies-used)
+    - [Approach](#approach)
+    - [Implementation Details](#implementation-details)
+      - [**Evolutionary Strategy and Selection Mechanisms**](#evolutionary-strategy-and-selection-mechanisms)
+        - [**Elitism Mechanism**](#elitism-mechanism)
+        - [**Stopping Criteria**](#stopping-criteria)
+        - [**Parameter Selection and Justification**](#parameter-selection-and-justification)
+        - [**Evolutionary Process Recap**](#evolutionary-process-recap)
+  - [Results](#results-3)
+
+
+## Lab 1: Set Cover Problem 
+
+The **Set Cover Problem** involves a universe of elements and a collection of sets, each containing some of these elements. The goal is to select the fewest sets (or minimize the total cost of selected sets) such that every element in the universe is covered by at least one selected set. This problem is NP-hard, meaning it's computationally difficult to find an optimal solution for large instances.
+
+### Algorithms Implemented
+I tried three different algorithms to solve the Set Cover problem:
+
+1. **Hill Climbing** with multiple mutations: In this version of hill climbing, the algorithm is initialized with a random solution and then multiple mutations are applied to the current solution during each iteration. The strength of these mutations (the number of mutations) decreases as iterations progress. This helps balance exploration and exploitation.
+2. **Simulated Annealing**: This algorithm allows the search to escape local optima by accepting worse solutions with a probability that decreases as the algorithm progresses. The probability of accepting suboptimal solutions is controlled by a temperature parameter that gradually cools down.
+3. **Tabu Search**: This approach avoids revisiting recently explored solutions by maintaining a tabu list, which helps to escape local optima and diversify the search space.
+
+### Experimental Setup
+The algorithms were tested on a set of six instances of the Set Cover problem, with the following characteristics:
+
+#### Instances
+|# INSTANCE| Universe Size | Number of Sets | Density|
+|----------|--------------|---------------|--------|
+| 1 | 100 | 10 | 0.2 |
+| 2 | 1,000 | 100 | 0.2 |
+| 3 | 10,000 | 1,000 | 0.2 |
+| 4 | 100,000 | 10,000 | 0.1 |
+| 5 | 100,000 | 10,000 | 0.2 |
+| 6 | 100,000 | 10,000 | 0.3 |
+
+### Results and Discussion
+Each algorithm was run on all problem instances, and the performance was evaluated in terms of solution cost, runtime, and the number of function calls required to reach a solution. The results indicate that:
+
+- **Hill Climbing** (HC) produced competitive results with relatively low computational cost, making it a good trade-off between efficiency and accuracy.
+- **Simulated Annealing** (SA) is the fastest algorithm but does not perform as well as Tabu search or Hill Climbing. 
+- **Tabu Search** (TS)  performs better than the other algorithms but requires more time to converge (~140x more time than HC, ~350x more calls to the fitness function than SA and 16x more calls than HC).
+
+So HC seems to be the best trade-off between performance and time.
+
+### Results
+Hill Climbing used for all the instances in the following experiments.
+
+| # INSTANCE | Best fitness | # OF CALLS |
+|----------|----------|----------|
+| 1 | -292.92 | 0 |
+| 2 | -7689.43 | 19   |
+| 3 | -741479.28| 292  |
+| 4 | -112751635.59 |  435 |
+| 5 |  -238795309.18 |  489 |
+| 6 | -370743077.11 | 474  |
+
+
+### Conclusion
+After extensive testing, **Hill Climbing** was selected as the best trade-off in terms of solution cost, runtime performance, and the number of function calls. 
+
+----
+
+## Lab 2: Traveling Salesman Problem
+The Traveling Salesman Problem (TSP) is an NP-hard problem in combinatorial optimization. Given a list of cities and the distances between each pair of cities, the task is to find the shortest possible tour that visits each city exactly once and returns to the original city.
+
+### Algorithms implemented
+
+The laboratory task is to implement two algorithm: one fast but more approximated and one slower but more precise. The algorithms implemented are the Greedy Algorithm and the Genetic Algorithm.
+
+#### Greedy Algorithm
+The Greedy Algorithm is a simple algorithm that starts from a random city and at each step selects the nearest city that has not been visited yet. The algorithm stops when all the cities have been visited.
+
+#### Genetic Algorithm
+The Genetic Algorithm is a metaheuristic inspired by the process of natural selection. 
+The Genetic Algorithm initializes a population of random TSP tour solutions. Each solution is evaluated based on its fitness, which is inversely related to the total tour distance. Parents for the next generation are selected using methods like Roulette Wheel, Tournament, or Rank Selection, which balance fitness and randomness. Selected parents then undergo crossover and mutation to generate new offspring, repeating the process until termination. 
+
+##### Fitness Function
+The fitness function is used to evaluate the quality of the individuals. In this laboratory task, the fitness function is based on the total distance of the path. The fitness of an individual is calculated as the inverse of the total distance of the path, so that the higher the fitness, the better the individual.
+
+##### Parent Selection
+The parent selection process is used to select the individuals that will be used to generate the next generation. There are several methods that can be used for parent selection, such as roulette wheel selection, tournament selection, and rank selection. All these methods have been tried in this laboratory task to find the best one.
+
+1. The roulette wheel selection method is based on the fitness of the individuals. The probability of an individual being selected is proportional to its fitness.
+
+2. The tournament selection method is based on selecting a random subset of individuals and then selecting the best individual from that subset.
+
+3. The rank selection method is based on ranking the individuals based on their fitness and then selecting the best individuals.
+
+
+After some tests, the best parent selection method has been found to be the *tournament* method.
+
+##### Crossover
+The crossover process is used to generate new individuals by combining the genetic information of the parents. There are several methods that can be used for tsp, such as Edge Recombination and Inver Over. All these methods have been tried in this laboratory task to find the best one.
+
+1. The edge recombination crossover method is based on the edges of the parents. The method starts by selecting a random edge from one of the parents and then selects the next edge based on the edges that are adjacent to the current edge.
+
+2. The inver over crossover method is based on taking a random element from one parent and then selecting an edge of this element from the other parent and then preserve this edge in the offspring, swapping the other elements between them as appear in the first parent, in the offspring.
+
+After some tests, the best crossover method has been found to be the *edge recombination* method.
+
+##### Mutation
+Mutation is used to introduce diversity in the population and prevent premature convergence. There are several methods that can be used for tsp, such as Inverse, and Scramble. All these methods have been tried in this laboratory task to find the best one.
+
+1. The inversion mutation method is based on selecting a random subset of the path and then inverting the order of the cities in that subset.
+
+2. The scramble mutation method is based on selecting a random subset of the path and then shuffling the order of the cities in that subset.
+
+After some tests, the best mutation method has been found to be the *inversion* method.
+The mutation rate is reduced over time to allow the algorithm to converge to a better solution.
+
+##### Other tweaks
+In order to improve the performance of the genetic algorithm, some tweaks have been made to the algorithm. These tweaks include:
+
+1. Replacement Rate: replacing part of population where offsprings and parents compete.
+2. Diversity Threshold: Maintain population diversity.
+
+
+##### Parameters
+
+| Parameter | Value | Note |
+| --- | --- | --- |
+| Population Size | 200 | 500 for China*|
+| Number of Generations | 50000 | |
+| Number of Parents | 40 | |
+| Initial Mutation Rate | 0.8 | |
+| Replacement Rate | 0.5 |  |
+| Diversity Threshold | 0.7 | Periodic check |
+
+*China has a large number of cities (726) and requires a larger population size to explore the search space effectively.
+
+### Results
+
+| State | Number of Cities | Greedy Path Lenght | Genetic Path Lenght |
+| --- | --- | --- | --- |
+| China | 726 | 63962.92 km | 54559.40 km |
+| Italy | 46 | 4436.03 km | 4245.04 km |
+| Russia | 167 | 42334.16 km | 36044.49 km |
+| USA | 326 | 48050.03 km | 40481.11 km |
+| Vanuatu | 8 | 1475.53 km | 1345.54 km |
+
+
+### Discussion
+
+* Comparison of Algorithms: The Genetic Algorithm generally outperforms the Greedy Algorithm, especially in larger instances, due to its ability to explore the solution space more effectively. However, the Greedy Algorithm is faster and can provide a good approximation for smaller instances.
+* Impact of Parameters: Adjusting parameters such as population size (notably for China), mutation rate, and diversity threshold can significantly influence the Genetic Algorithm's performance.
+* Scalability: While the Genetic Algorithm performs well, scalability remains a challenge for very large TSP instances, suggesting the need for further optimization techniques or more powerful computational resources.
+* Future Enhancements: Consider integrating Greedy Algorithm to initialize the Genetic Algorithm and exploring other crossover and mutation methods.
+
+
+## Lab 3F: Short Path between two cities
+This script implements a **Greedy Best-First Search** algorithm to find a short path between two randomly chosen cities in Italy. It reads city coordinates from a CSV file, computes pairwise geodesic distances, and constructs a graph where cities are nodes and edges are added based on distance constraints. The algorithm iteratively selects the nearest unvisited city until reaching the destination. 
+
+## Lab 3: n-Puzzle description
+The n-Puzzle is a sliding puzzle that consists of a frame of numbered square tiles in random order with one tile missing. The puzzle also exists in other sizes, particularly the smaller 8-puzzle. If the size is 3×3 tiles, the puzzle is called the 8-puzzle or 9-puzzle, respectively, for the number of tiles and the number of spaces. The goal of the puzzle is to place the tiles in order by making sliding moves that use the empty space.
+It's a (n^2-1)-puzzle, where n is the number of rows and columns.
+
+### Algorithms implemented
+#### Informed Search
+##### Best-First Search
+Best-First Search is a search algorithm that explores a graph by expanding the most promising node chosen according to a specified rule. The algorithm uses a priority queue to keep track of the nodes that need to be explored.
+
+##### A* Search
+A* Search is a search algorithm that finds the shortest path between the initial and the final node. It uses a heuristic function to estimate the cost of the cheapest path through a node. The algorithm uses a priority queue to keep track of the nodes that need to be explored.
+
+The main difference between Best-First Search and A* Search is that A* Search uses both the cost to reach a node and the heuristic function to estimate the cost of the cheapest path through a node, while Best-First Search only uses the heuristic function.
+
+#### Heuristic Function
+The heuristic function is used to estimate the cost of the cheapest path from the current node to the goal node. In this laboratory task, the heuristic function used is the Manhattan distance, which is the sum of the horizontal and vertical distances between the current node and the goal node.
+##### Manhattan Distance
+The Manhattan distance is the sum of the horizontal and vertical distances between the current node and the goal node. It is calculated as the absolute difference between the x-coordinates and the y-coordinates of the current node and the goal node.
+
+### Results
+The initial state is generated randomly performing 1000 steps from the goal state.
+The following results correspond to a 3x3 puzzle:
+
+| Algorithm | Time (s) | Path Length (Quality) | N. actions evaluated (Cost) | Efficiency (Quality/Cost) |
+|-----------|----------|-----------------------|-----------------------------| ------------------------- |
+| Best-First| 0.0151  | 42                    | 502                          |  0.0837                 |
+| A*        | 0.0732    | 24                   | 3010                        |  0.0080                  |
+
+
+### Discussion
+
+From the result we can see that the Best-First Search algorithm is more efficient than the A* Search algorithm. The Best-First Search algorithm evaluates fewer actions and has a higher efficiency than the A* Search algorithm. The Best-First Search algorithm is faster than the A* Search algorithm because it evaluates fewer actions and has a higher efficiency. However, A* find the optimal path, while Best-First Search does not guarantee the optimal path. The A* is also infeasible for large problems (e.g. 5x5) because it evaluates a large number of actions and become very slow.
 
 ## Project: Symbolic Regression using Genetic Programming
 
@@ -199,14 +419,15 @@ The algorithm implements two primary stopping conditions to optimize computation
 These criteria together strike a balance between exploration (allowing the algorithm to evolve sufficiently complex solutions) and computational efficiency (stopping when further evolution is unlikely to yield improvements).
 
 ###### **Parameter Selection and Justification**
-The choice of hyperparameters is critical for ensuring that the algorithm effectively explores the solution space while maintaining convergence speed. The following parameters were carefully chosen:
+The choice of hyperparameters is critical for ensuring that the algorithm effectively explores the solution space while maintaining convergence speed. These parameters were carefully chosen after an extensive tuning process, involving a try-and-error approach to identify the configurations that performed best among all tested solutions. The following parameters were chosen:
+
 
 | **Parameter**       | **Value** | **Justification** |
 |---------------------|----------|-------------------|
 | **Population Size** | 1500     | Provides a diverse pool of solutions, reducing the risk of premature convergence. |
 | **Max Depth**       | 7        | Limits the complexity of the evolved expressions, preventing excessive tree growth. |
 | **Generations**     | 150      | Ensures a sufficient number of iterations for optimization while maintaining efficiency. |
-| **Tournament Size** | 15       | Balances selection pressure, allowing strong solutions to be favored without losing diversity. |
+| **Tournament Size** | 15       | Balances selection pressure, allowing strong solutions to be favored without losing diversity. Adapted to the large population. |
 | **Elitism Rate**    | 5% | Ensures top solutions are preserved while still allowing innovation. |
 | **Mutation Probability** | 50%| Maintains genetic diversity, ensuring that new structures continue to emerge. |
 | **Crossover probabilty** | 100% | Ensures that crossover is always applied (exception for the elite), promoting genetic recombination. |
@@ -248,6 +469,19 @@ In contrast, functions such as **f2** and **f8** exhibit significantly higher MS
 Other functions, such as **f3** and **f4**, achieve moderate performance, with MSE values of **0.35665** and **0.068457**, respectively. While **f3** incorporates multiple nested operations, including absolute values, hyperbolic tangents, and sinusoidal components, **f4** maintains a simpler yet still effective structure, leveraging sine and cosine transformations. Their comparatively lower MSE values indicate that these expressions may hold some predictive relevance, though their interpretability and robustness should be further analyzed.
 
 Furthermore, **f6** and **f7** also display varying degrees of effectiveness, with MSE values of **7.9451e-08** and **3.6774e+02**, respectively. While **f6** appears to provide a relatively strong approximation with minor numerical adjustments, **f7** involves hyperbolic cosine transformations that introduce significant distortions, as reflected in its larger error.
+
+| Function | MSE Value       | 
+|----------|----------------|
+| f1       | 7.1259e-34     | 
+| f2       | 1.5524e+13     | 
+| f3       | 0.35665        | 
+| f4       | 0.068457       | 
+| f5       | 5.5728e-18     | 
+| f6       | 7.9451e-08     | 
+| f7       | 3.6774e+02     |
+| f8       | 5.0586e+05     | 
+
+
 
 Overall, the results demonstrate the strengths and limitations of the genetic programming approach in symbolic regression. While some evolved functions exhibit remarkable accuracy, others suffer from excessive complexity and poor generalization. The findings highlight the importance of balancing expressiveness and simplicity in the evolutionary process, ensuring that generated expressions remain both interpretable and predictive.
 
