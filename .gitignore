@@ -1,8 +1,0 @@
-venv/
-.idea/
-__pycache__/
-poetry.lock
-pyproject.toml
-symreg_user.ipynb
-symreg.ipynb
-older_solutions/
